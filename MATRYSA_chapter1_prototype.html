@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>MATRYSA | فصل اول</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;800&display=swap');
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071126;color:#fff;font-family:Vazirmatn,Tahoma,sans-serif}canvas{display:block}
+#hud{position:fixed;inset:0;pointer-events:none}.top{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.panel{background:#07152be8;border:1px solid #5de7ed66;border-radius:13px;padding:9px 12px;backdrop-filter:blur(9px);font-size:12px;line-height:1.8}.brand b{display:block;color:#5de7ed;font-size:18px;letter-spacing:2px}.mission{max-width:48vw}.mission b{color:#ffd36a}.stats{min-width:90px}
+#barbg{height:6px;background:#ffffff25;border-radius:9px;margin-top:5px}#bar{height:100%;width:0;background:linear-gradient(90deg,#5de7ed,#ffd36a);border-radius:9px}
+#toast{position:absolute;top:105px;left:50%;transform:translateX(-50%);background:#07152bee;border:1px solid #5de7ed66;border-radius:10px;padding:9px 15px;font-size:12px;opacity:0;transition:.2s;text-align:center;max-width:90vw}
+#prompt{position:absolute;bottom:20%;left:50%;transform:translateX(-50%);background:#07152bee;border:1px solid #ffd36a99;border-radius:10px;padding:8px 12px;font-size:12px;display:none}
+#controls{position:absolute;bottom:15px;left:15px;right:15px;display:flex;justify-content:space-between;align-items:end}
+#stick{width:116px;height:116px;border-radius:50%;background:#d9f8ff20;border:1px solid #b7faff88;position:relative;pointer-events:auto;touch-action:none}
+#nub{position:absolute;width:46px;height:46px;left:34px;top:34px;border-radius:50%;background:#8beaf0bb;border:2px solid white}
+button{font-family:inherit;cursor:pointer}.ctrl{width:58px;height:58px;border-radius:50%;border:1px solid #ffffff77;background:#102c4ddd;color:white;font-weight:700;font-size:12px;pointer-events:auto;touch-action:none}.ctrl.main{background:#12677c}
+#story,#quiz,#ending{position:fixed;inset:0;z-index:5;background:radial-gradient(ellipse,#142b51f5,#030817f7);display:flex;align-items:center;justify-content:center;padding:18px}
+.dialog{width:min(620px,95vw);max-height:90vh;overflow:auto;background:linear-gradient(145deg,#10274af5,#080f25f7);border:1px solid #66e9f088;border-radius:20px;padding:clamp(18px,4vw,32px);box-shadow:0 20px 80px #000a}
+.eyebrow{color:#5de7ed;font-size:12px;font-weight:800;letter-spacing:1px}h1{font-size:clamp(27px,6vw,43px);margin:8px 0;color:white}h2{color:#ffd36a;margin:8px 0 12px}p{font-size:14px;line-height:2;color:#dce7ff}
+.action{border:0;border-radius:11px;padding:12px 23px;background:linear-gradient(90deg,#17a8b7,#6555c8);color:white;font-size:14px;font-weight:700;margin:7px 4px 0 0}
+input{width:100%;padding:12px;border-radius:10px;border:1px solid #6ce5e9;background:#06152b;color:white;font:700 18px Vazirmatn;text-align:center;margin-top:8px}#feedback{min-height:28px;color:#ffd36a;font-size:13px}.hidden{display:none!important}
+@media(hover:hover) and (pointer:fine){#controls{display:none}#prompt{bottom:7%}}
+@media(max-width:600px){.panel{padding:7px 8px;font-size:10px}.brand b{font-size:15px}.mission{max-width:46vw}}
+</style></head>
+<body>
+<div id="hud"><div class="top">
+<div class="panel brand"><b>MATRYSA</b>هر معما، یک قدم تا نجات ماتریسا</div>
+<div class="panel mission"><b>مأموریت: نیروگاه خاموش</b><br><span id="task">سه کریستال انرژی را پیدا کن.</span><div id="barbg"><div id="bar"></div></div></div>
+<div class="panel stats">کریستال‌ها: <span id="count">۰ / ۳</span><br>فصل ۱ از ۹</div></div>
+<div id="toast"></div><div id="prompt"></div>
+<div id="controls"><div id="stick"><div id="nub"></div></div><div><button class="ctrl" id="jump">پرش</button> <button class="ctrl main" id="use">تعامل</button></div></div></div>
+
+<div id="story"><div class="dialog">
+<div class="eyebrow">یک ماجراجویی تازه آغاز می‌شود | رده‌بندی هدف: ۱۴+</div>
+<h1>ماتریسا در آستانه خاموشی است...</h1>
+<p>سال‌هاست شهر ماتریسا با نیروی «قلب دانش» زنده مانده است؛ هسته‌ای شگفت‌انگیز که انرژی خود را از دانش و اندیشه می‌گیرد.</p>
+<p>اما امشب، نوری ناشناخته از برج مرکزی گذشت و قلب دانش به نه قطعه تقسیم شد. نیروگاه‌ها خاموش شدند، پل‌ها از کار افتادند و شهر در سکوت فرو رفت.</p>
+<p>تو در نقش <b>آرین</b>، کاوشگر جوان ماتریسا، باید وارد نیروگاه قدیمی شوی. سه کریستال انرژی را پیدا کن، قفل ریاضی را باز کن و نخستین قطعه قلب دانش را به دست بیاور. سرنوشت شهر به تو بستگی دارد.</p>
+<p><b>کنترل رایانه:</b> WASD یا کلیدهای جهت‌نما برای حرکت، Space برای پرش و E برای تعامل. <b>کنترل گوشی:</b> جوی‌استیک و دکمه‌های پایین صفحه.</p>
+<button class="action" id="start">شروع ماجراجویی</button></div></div>
+
+<div id="quiz" class="hidden"><div class="dialog">
+<div class="eyebrow">آزمایشگاه نیروگاه | معمای ریاضی</div><h2>قفل دمایی را باز کن</h2>
+<p>دمای محفظه نیروگاه ۸- درجه است. پس از فعال‌شدن سامانه گرمایشی، دما ۱۳ درجه افزایش پیدا می‌کند. دمای نهایی چند درجه خواهد بود؟</p>
+<p>عبارت: <b>(−۸) + ۱۳ = ؟</b></p><input id="answer" type="number" inputmode="numeric" placeholder="پاسخ را وارد کن"><div id="feedback"></div>
+<button class="action" id="check">بررسی پاسخ</button><button class="action" id="back" style="background:#293b5b">بازگشت</button></div></div>
+<div id="ending" class="hidden"><div class="dialog"><div class="eyebrow">پایان فصل اول</div><h1>نخستین نور بازگشت!</h1>
+<p>با روشن‌شدن نیروگاه، بخشی از شهر از تاریکی بیرون آمد. در میان نورهای آبی، نخستین قطعه قلب دانش پدیدار شد.</p>
+<p>اما هشت قطعه دیگر هنوز در سرزمین‌های ناشناخته‌اند. از برج مرکزی پیامی رمزآلود به گوش می‌رسد: «این تازه آغاز راه است...»</p>
+<h2>قطعه اول قلب دانش به دست آمد.</h2><button class="action" onclick="location.reload()">بازی دوباره</button></div></div>
+
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+const $=id=>document.getElementById(id);
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x071126);scene.fog=new THREE.Fog(0x071126,20,70);
+const camera=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,120);
+const renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;document.body.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xa9c7ff,0x172035,1.4));
+const sun=new THREE.DirectionalLight(0xffd9a0,2);sun.position.set(-8,15,8);sun.castShadow=true;scene.add(sun);
+const cyan=new THREE.PointLight(0x28dfff,25,35);cyan.position.set(0,5,-12);scene.add(cyan);
+const material=(c,e=0)=>new THREE.MeshStandardMaterial({color:c,emissive:e,roughness:.55});
+const floorMat=material(0x182945),wallMat=material(0x263d5c),metal=material(0x62788e),glow=material(0x42dff0,0x087b99),gold=material(0xffc95b,0x8c5100);
+function cube(w,h,d,m,x,y,z){let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;scene.add(o);return o}
+cube(48,.5,54,floorMat,0,-.35,-10);
+for(const x of [-24,24])cube(1,9,54,wallMat,x,4.2,-10);
+cube(48,9,1,wallMat,0,4.2,-37);cube(48,9,1,wallMat,0,4.2,17);
+for(let i=0;i<9;i++){let x=-18+i*4.5;cube(.2,7,.2,metal,x,3.2,-36.3);let l=new THREE.PointLight(0x35dff0,2,8);l.position.set(x,5,-35);scene.add(l)}
+for(let i=0;i<6;i++){let z=-29+i*8;let pipe=new THREE.Mesh(new THREE.CylinderGeometry(.2,.2,38,12),metal);pipe.rotation.z=Math.PI/2;pipe.position.set(0,6,z);scene.add(pipe);let lamp=new THREE.PointLight(0x318fc7,1.5,12);lamp.position.set(0,7,z);scene.add(lamp)}
+for(let x of [-12,12]){cube(4,3,4,wallMat,x,1.2,-13);let ring=new THREE.Mesh(new THREE.TorusGeometry(1.2,.14,10,32),glow);ring.position.set(x,3,-13);scene.add(ring)}
+for(let i=0;i<9;i++){let x=(i%2?1:-1)*(7+(i%3)*2),z=-5-Math.floor(i/2)*8;let c=cube(2,2,2,i%2?metal:wallMat,x,1,z);c.rotation.y=i*.18}
+const hero=new THREE.Group();scene.add(hero);
+const body=new THREE.Mesh(new THREE.CapsuleGeometry(.46,.85,5,10),material(0xe87532));body.position.y=1.02;body.castShadow=true;hero.add(body);
+const head=new THREE.Mesh(new THREE.SphereGeometry(.4,20,16),material(0xf0bd91));head.position.y=1.9;hero.add(head);
+const hair=new THREE.Mesh(new THREE.SphereGeometry(.42,16,10,0,Math.PI*2,0,Math.PI*.55),material(0x342b36));hair.position.y=2.08;hero.add(hair);
+const pack=new THREE.Mesh(new THREE.BoxGeometry(.68,.72,.32),material(0x16a7b5));pack.position.set(0,1.12,.45);hero.add(pack);
+for(let x of [-.2,.2]){let leg=new THREE.Mesh(new THREE.CylinderGeometry(.12,.15,.55,10),material(0x253d69));leg.position.set(x,.28,0);hero.add(leg)}
+hero.position.set(0,0,9);
+const crystals=[];
+for(const [x,z] of [[-9,3],[10,-7],[0,-23]]){let g=new THREE.Group();let gem=new THREE.Mesh(new THREE.OctahedronGeometry(.7),new THREE.MeshStandardMaterial({color:0x4df2ff,emissive:0x087e9d,metalness:.25,roughness:.2}));gem.position.y=1;g.add(gem);let ring=new THREE.Mesh(new THREE.TorusGeometry(1,.05,8,32),gold);ring.rotation.x=Math.PI/2;g.add(ring);let light=new THREE.PointLight(0x38eaff,3,7);light.position.y=1;g.add(light);g.position.set(x,0,z);scene.add(g);crystals.push({g,got:false})}
+const consoleObj=new THREE.Group();consoleObj.position.set(0,0,-28);scene.add(consoleObj);
+let pedestal=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.8,1,8),metal);pedestal.position.y=.5;consoleObj.add(pedestal);
+let screen=new THREE.Mesh(new THREE.BoxGeometry(1.6,1.1,.16),glow);screen.position.y=1.5;consoleObj.add(screen);
+let core=new THREE.Mesh(new THREE.IcosahedronGeometry(1.7,1),new THREE.MeshStandardMaterial({color:0x50eaff,emissive:0x087b99,metalness:.3,roughness:.2}));core.position.set(0,3,-31);core.visible=false;scene.add(core);
+let coreRing=new THREE.Mesh(new THREE.TorusGeometry(3,.12,12,64),gold);coreRing.position.set(0,3,-31);coreRing.visible=false;scene.add(coreRing);
+let collected=0,solved=false,started=false,finished=false,vy=0,onGround=true;
+const keys={};let stickX=0,stickY=0,stickActive=false;
+function toast(s){$('toast').textContent=s;$('toast').style.opacity=1;clearTimeout(toast.timer);toast.timer=setTimeout(()=>$('toast').style.opacity=0,2500)}
+function update(){ $('count').textContent=['۰','۱','۲','۳'][collected]+' / ۳';$('bar').style.width=((collected+(solved?1:0))/4*100)+'%';$('task').textContent=solved?'به پنل مرکزی برو و نیروگاه را روشن کن.':`سه کریستال انرژی را پیدا کن (${collected} از ۳).`}
+function distance(a,b){return a.distanceTo(b)}
+function interact(){if(!started||finished||!$('quiz').classList.contains('hidden'))return;
+for(const c of crystals){if(!c.got&&distance(hero.position,c.g.position)<2.3){c.got=true;c.g.visible=false;collected++;update();toast(collected===3?'هر سه کریستال پیدا شد! به پنل مرکزی برو.':'کریستال انرژی پیدا شد!');return}}
+if(distance(hero.position,consoleObj.position)<3){if(collected<3){toast('پنل قفل است؛ ابتدا هر سه کریستال را پیدا کن.');return}if(!solved){$('quiz').classList.remove('hidden');$('answer').value='';$('feedback').textContent='';return}finished=true;core.visible=true;coreRing.visible=true;$('ending').classList.remove('hidden');return}
+toast('چیزی برای تعامل در نزدیکی تو نیست.')}
+$('start').onclick=()=>{$('story').classList.add('hidden');started=true;toast('وارد نیروگاه شدی. نور کریستال‌ها را پیدا کن.')};
+$('check').onclick=()=>{if($('answer').value.trim()===''){$('feedback').textContent='پاسخ را وارد کن.';return}if(Number($('answer').value)===5){solved=true;$('feedback').textContent='آفرین! پاسخ درست است؛ پنل فعال شد.';update();setTimeout(()=>$('quiz').classList.add('hidden'),1000)}else $('feedback').textContent='دوباره فکر کن: از ۸- شروع کن و ۱۳ واحد اضافه کن.'};
+$('back').onclick=()=>$('quiz').classList.add('hidden');
+$('use').onpointerdown=e=>{e.preventDefault();interact()};
+$('jump').onpointerdown=e=>{e.preventDefault();if(onGround){vy=7.2;onGround=false}};
+addEventListener('keydown',e=>{keys[e.code]=true;if(e.code==='KeyE')interact();if(e.code==='Space'&&onGround){vy=7.2;onGround=false}});
+addEventListener('keyup',e=>keys[e.code]=false);
+const stick=$('stick'),nub=$('nub');
+function setStick(e){let r=stick.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),len=Math.hypot(dx,dy)||1,max=37;if(len>max){dx*=max/len;dy*=max/len}stickX=dx/max;stickY=dy/max;nub.style.transform=`translate(${dx}px,${dy}px)`}
+stick.onpointerdown=e=>{stickActive=true;stick.setPointerCapture(e.pointerId);setStick(e)};
+stick.onpointermove=e=>{if(stickActive)setStick(e)};
+function reset(){stickActive=false;stickX=stickY=0;nub.style.transform='translate(0,0)'}
+stick.onpointerup=reset;stick.onpointercancel=reset;stick.onlostpointercapture=reset;
+const clock=new THREE.Clock(),move=new THREE.Vector3();
+function animate(){requestAnimationFrame(animate);let dt=Math.min(clock.getDelta(),.04),t=clock.elapsedTime;
+crystals.forEach(c=>{if(!c.got){c.g.rotation.y+=dt*.8;c.g.position.y=.15+Math.sin(t*2+c.g.position.x)*.15}});
+core.rotation.y+=dt*.5;coreRing.rotation.z-=dt*.25;
+if(started&&!finished&&$('quiz').classList.contains('hidden')){
+let ix=(keys.KeyD||keys.ArrowRight?1:0)-(keys.KeyA||keys.ArrowLeft?1:0)+stickX;
+let iz=(keys.KeyS||keys.ArrowDown?1:0)-(keys.KeyW||keys.ArrowUp?1:0)+stickY;
+move.set(ix,0,iz);if(move.length()>1)move.normalize();
+let dir=new THREE.Vector3();camera.getWorldDirection(dir);dir.y=0;dir.normalize();let right=new THREE.Vector3(-dir.z,0,dir.x);
+let world=new THREE.Vector3().addScaledVector(right,move.x).addScaledVector(dir,-move.z);
+if(world.lengthSq()>0){world.normalize();hero.position.addScaledVector(world,6.3*dt);hero.rotation.y=Math.atan2(world.x,world.z)}
+vy-=18*dt;hero.position.y+=vy*dt;if(hero.position.y<=0){hero.position.y=0;vy=0;onGround=true}
+hero.position.x=THREE.MathUtils.clamp(hero.position.x,-20,20);hero.position.z=THREE.MathUtils.clamp(hero.position.z,-35,14)}
+let desired=new THREE.Vector3(hero.position.x,hero.position.y+4.2,hero.position.z+8.5);camera.position.lerp(desired,.09);camera.lookAt(hero.position.x,hero.position.y+1.2,hero.position.z-1.5);
+let hint='';if(crystals.some(c=>!c.got&&distance(hero.position,c.g.position)<2.3))hint='برای برداشتن کریستال، E یا دکمه تعامل را بزن.';
+else if(distance(hero.position,consoleObj.position)<3)hint='برای استفاده از پنل مرکزی، E یا تعامل را بزن.';
+$('prompt').textContent=hint;$('prompt').style.display=hint?'block':'none';renderer.render(scene,camera)}
+camera.position.set(0,5,18);camera.lookAt(0,1,0);update();animate();
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.8))});
+</script></body></html>
