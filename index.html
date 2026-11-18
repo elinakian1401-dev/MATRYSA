@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MATRYSA | فصل اول: اعداد صحیح و گویا</title>
+<style>
+:root{--bg:#091326;--panel:#14243d;--cyan:#55e6df;--gold:#ffd166;--pink:#ff7aa8;--text:#f4f7ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 0,#203c65,#091326 65%);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+header{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid #ffffff20;background:#081326cc}
+.logo{font-weight:900;letter-spacing:1px;color:var(--cyan);font-size:20px}.sub{font-size:12px;color:#b8c9e5;margin-top:4px}
+.stats{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#203653;border:1px solid #ffffff20;padding:8px 12px;border-radius:20px;font-size:13px}
+main{max-width:1050px;margin:18px auto;padding:0 14px;display:grid;grid-template-columns:minmax(0,1.6fr) minmax(260px,.8fr);gap:14px}
+.scene,.side{background:linear-gradient(145deg,#172b49,#0e1b31);border:1px solid #ffffff20;border-radius:18px;overflow:hidden;box-shadow:0 16px 40px #0005}
+.scenehead{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}.scenehead h1{font-size:18px;margin:0}.tag{color:var(--gold);font-size:12px}
+canvas{width:100%;height:auto;display:block;background:#101f38;touch-action:none}
+.controls{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;gap:12px;flex-wrap:wrap;color:#b8c9e5;font-size:12px}
+.pad{display:grid;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,36px);gap:4px;direction:ltr}
+.pad button{padding:0}.pad .up{grid-column:2}.pad .left{grid-column:1;grid-row:2}.pad .down{grid-column:2;grid-row:2}.pad .right{grid-column:3;grid-row:2}
+button{border:1px solid #ffffff30;background:#254568;color:white;padding:10px 13px;border-radius:10px;font-weight:bold;cursor:pointer}
+button:hover{filter:brightness(1.2)}button.primary{background:linear-gradient(90deg,#078c99,#3266bd);border:0}
+.side{padding:17px}.side h2{font-size:17px;margin:0 0 10px;color:var(--cyan)}.side p{line-height:1.9;color:#d4def0;font-size:13px}
+.mission{padding:12px;border-radius:12px;background:#0c1a2e;border:1px solid #ffffff18;margin:10px 0}.mission strong{color:var(--gold)}.progress{height:8px;background:#30435f;border-radius:20px;overflow:hidden;margin:8px 0 14px}.bar{height:100%;background:linear-gradient(90deg,#55e6df,#ffd166);width:0%;transition:.3s}
+.levels{display:grid;gap:7px}.level{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border-radius:10px;background:#ffffff0b;font-size:12px}.level.active{outline:1px solid var(--cyan);background:#55e6df18}.level.done{color:#9df0ca}
+.overlay{position:fixed;inset:0;background:#030914d9;display:flex;align-items:center;justify-content:center;padding:16px;z-index:5}.modal{width:min(520px,100%);background:linear-gradient(145deg,#1a3152,#101c31);border:1px solid #ffffff35;border-radius:20px;padding:22px;box-shadow:0 20px 70px #0009}.modal h2{color:var(--gold);margin-top:0}.modal p{line-height:1.9;font-size:14px}.modal input{width:100%;padding:13px;border-radius:10px;border:1px solid #ffffff40;background:#08172b;color:white;font-size:18px;margin:8px 0;text-align:center}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.feedback{min-height:26px;font-size:13px;color:var(--cyan);margin-top:8px}.hidden{display:none!important}
+footer{text-align:center;color:#8fa5c7;font-size:11px;padding:8px 15px 20px}
+@media(max-width:760px){main{grid-template-columns:1fr}.side{order:2}.scenehead h1{font-size:15px}.controls{justify-content:center}.stats{font-size:11px}}
+</style>
+</head>
+<body>
+<header>
+ <div><div class="logo">MATRYSA <span style="color:#fff">| ماتریسا</span></div><div class="sub">شهر گمشده ریاضیات · فصل اول: اعداد صحیح و گویا</div></div>
+ <div class="stats"><span class="pill">💎 انرژی: <b id="crystals">۰</b> / ۴</span><span class="pill">⭐ امتیاز: <b id="score">۰</b></span><span class="pill">📍 <b id="stage">نیروگاه خاموش</b></span></div>
+</header>
+<main>
+<section class="scene">
+ <div class="scenehead"><h1 id="sceneTitle">دروازه‌ی نیروگاه خاموش</h1><span class="tag">مأموریت تک‌نفره آرین</span></div>
+ <canvas id="game" width="800" height="460" aria-label="محیط بازی ماتریسا"></canvas>
+ <div class="controls">
+  <span>حرکت: کلیدهای جهت‌نما یا WASD · نزدیک دروازه‌ها کلید «تعامل»</span>
+  <div class="pad">
+   <button class="up" data-move="up">▲</button><button class="left" data-move="left">◀</button><button class="down" data-move="down">▼</button><button class="right" data-move="right">▶</button>
+  </div>
+  <button class="primary" id="interact">تعامل / انجام مأموریت</button>
+ </div>
+</section>
+<aside class="side">
+ <h2>📜 دفترچه مأموریت آرین</h2>
+ <p id="story">قلب دانش شکسته و نیروگاه شهر خاموش شده است. آرین باید چهار مهر انرژی را با حل معماهای ریاضی فعال کند.</p>
+ <div class="mission"><strong>هدف فعلی</strong><p id="objective">به سوی نشان درخشان وسط محوطه حرکت کن و تعامل را بزن.</p><div class="progress"><div class="bar" id="bar"></div></div><small id="progressText">۰ از ۴ مأموریت</small></div>
+ <h2>🧭 مسیر فصل اول</h2>
+ <div class="levels" id="levels">
+  <div class="level active"><span>۱. پل اعداد صحیح</span><span>🔒</span></div>
+  <div class="level"><span>۲. تالار مقایسه گویاها</span><span>🔒</span></div>
+  <div class="level"><span>۳. جمع و تفریق انرژی</span><span>🔒</span></div>
+  <div class="level"><span>۴. دروازه ضرب و تقسیم</span><span>🔒</span></div>
+ </div>
+ <p style="font-size:11px;color:#91a8c9">راهنما: جواب هر معما را در پنجره وارد کن. برای کسرها از شکل a/b استفاده کن؛ مثلاً 3/4.</p>
+</aside>
+</main>
+<footer>MATRYSA · نسخه آزمایشی فصل اول · ساخته‌شده برای یادگیری تعاملی ریاضی هشتم</footer>
+
+<div class="overlay" id="intro">
+ <div class="modal">
+  <h2>به ماتریسا خوش آمدی، آرین!</h2>
+  <p>شهر ماتریسا در تاریکی فرو رفته است. چهار مهر ریاضی در بخش‌های مختلف نیروگاه پنهان شده‌اند. با حل معماهای اعداد صحیح و گویا، انرژی شهر را بازگردان.</p>
+  <p><b>روش بازی:</b> آرین را در محیط حرکت بده، به نشان نورانی نزدیک شو و دکمه تعامل را بزن. بازی روی گوشی و رایانه قابل اجراست.</p>
+  <button class="primary" id="start">شروع فصل اول</button>
+ </div>
+</div>
+<div class="overlay hidden" id="quiz">
+ <div class="modal">
+  <h2 id="quizTitle">معمای ریاضی</h2>
+  <p id="question"></p>
+  <input id="answer" autocomplete="off" placeholder="پاسخ را بنویس؛ مثلاً 5 یا 3/4">
+  <div class="actions"><button class="primary" id="check">ثبت پاسخ</button><button id="hint">راهنمایی</button><button id="close">بازگشت به بازی</button></div>
+  <div class="feedback" id="feedback"></div>
+ </div>
+</div>
+<div class="overlay hidden" id="ending">
+ <div class="modal">
+  <h2>✨ نیروگاه دوباره روشن شد!</h2>
+  <p>آفرین آرین! چهار مهر انرژی را فعال کردی و نخستین بخش قلب دانش را بازگرداندی.</p>
+  <p id="finalScore"></p>
+  <button class="primary" onclick="location.reload()">شروع دوباره فصل اول</button>
+ </div>
+</div>
+<script>
+(()=>{
+const canvas=document.getElementById('game'),ctx=canvas.getContext('2d');
+const $=id=>document.getElementById(id);
+const player={x:105,y:350,r:15,speed:3.1};
+const keys={};let crystals=0,score=0,active=0,started=false,quizOpen=false;
+const missions=[
+ {name:'پل اعداد صحیح',title:'مهر اول: دمای پل',q:'دمای یک پل یخی ۸- درجه است. اگر دما ۱۳ درجه افزایش پیدا کند، دمای جدید چند درجه می‌شود؟',a:['5','+5','۵','+۵'],hint:'از ۸- شروع کن و ۱۳ واحد به سمت راست محور حرکت کن.',explain:'(−۸) + ۱۳ = ۵'},
+ {name:'تالار مقایسه گویاها',title:'مهر دوم: دو مسیر',q:'کدام عدد بزرگ‌تر است؟  −۲/۳ یا −۳/۴ ؟ فقط عدد بزرگ‌تر را به شکل کسر بنویس.',a:['-2/3','−2/3','-۲/۳','−۲/۳'],hint:'هر دو منفی‌اند؛ عددی که به صفر نزدیک‌تر است بزرگ‌تر است.',explain:'−۲/۳ از −۳/۴ بزرگ‌تر است، چون به صفر نزدیک‌تر است.'},
+ {name:'جمع و تفریق انرژی',title:'مهر سوم: ذخیره انرژی',q:'حاصل را به دست آور:  ۳/۴ + (−۱/۲) = ؟ پاسخ را به شکل کسر ساده بنویس.',a:['1/4','۱/۴','0.25','۰/۲۵'],hint:'۱/۲ را به کسر هم‌مخرج تبدیل کن: ۲/۴.',explain:'۳/۴ − ۲/۴ = ۱/۴'},
+ {name:'دروازه ضرب و تقسیم',title:'مهر چهارم: رمز نهایی',q:'حاصل را حساب کن:  (−۲/۳) × (۳/۴) = ؟ پاسخ را به شکل کسر ساده بنویس.',a:['-1/2','−1/2','-۱/۲','−۱/۲','-0.5','−۰/۵'],hint:'صورت‌ها و مخرج‌ها را در هم ضرب کن؛ حاصل ضرب دو عدد با علامت مخالف منفی است.',explain:'(−۲×۳)/(۳×۴) = −۶/۱۲ = −۱/۲'}
+];
+const targets=[{x:350,y:130},{x:650,y:150},{x:650,y:360},{x:390,y:350}];
+const obstacles=[{x:235,y:80,w:70,h:130},{x:470,y:40,w:65,h:145},{x:470,y:270,w:70,h:110},{x:120,y:200,w:110,h:45}];
+function draw(){
+ const g=ctx.createLinearGradient(0,0,800,460);g.addColorStop(0,'#18395a');g.addColorStop(1,'#0a172b');ctx.fillStyle=g;ctx.fillRect(0,0,800,460);
+ // floor grid
+ ctx.strokeStyle='#4bcac333';ctx.lineWidth=1;
+ for(let x=0;x<800;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,460);ctx.stroke()}
+ for(let y=0;y<460;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(800,y);ctx.stroke()}
+ // pathways
+ ctx.fillStyle='#294765';ctx.fillRect(0,218,800,42);ctx.fillRect(370,0,42,460);
+ // obstacles
+ obstacles.forEach(o=>{ctx.fillStyle='#263e5b';ctx.fillRect(o.x,o.y,o.w,o.h);ctx.strokeStyle='#6d91b4';ctx.strokeRect(o.x,o.y,o.w,o.h);ctx.fillStyle='#385b7d';ctx.fillRect(o.x+7,o.y+7,o.w-14,8)});
+ // target
+ const t=targets[active];if(t){ctx.save();ctx.translate(t.x,t.y);ctx.rotate(Date.now()/900);ctx.strokeStyle='#55e6df';ctx.lineWidth=4;ctx.shadowBlur=20;ctx.shadowColor='#55e6df';ctx.beginPath();ctx.rect(-17,-17,34,34);ctx.stroke();ctx.restore();ctx.fillStyle='#fff';ctx.font='13px Tahoma';ctx.textAlign='center';ctx.fillText('مأموریت '+(active+1),t.x,t.y-30)}
+ // decorative energy pylons
+ [[65,75],[735,75],[70,390],[735,390]].forEach(([x,y],i)=>{ctx.fillStyle='#ffd166';ctx.shadowBlur=14;ctx.shadowColor='#ffd166';ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0});
+ // player shadow/body
+ ctx.fillStyle='#0006';ctx.beginPath();ctx.ellipse(player.x,player.y+13,17,7,0,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#ff9b45';ctx.beginPath();ctx.arc(player.x,player.y,14,0,Math.PI*2);ctx.fill();ctx.fillStyle='#55e6df';ctx.fillRect(player.x-10,player.y+5,20,8);
+ ctx.fillStyle='#f6e5cf';ctx.beginPath();ctx.arc(player.x,player.y-5,7,0,Math.PI*2);ctx.fill();
+ ctx.fillStyle='#fff';ctx.font='12px Tahoma';ctx.textAlign='center';ctx.fillText('آرین',player.x,player.y-24);
+ // lower legend
+ ctx.fillStyle='#dcecff';ctx.font='13px Tahoma';ctx.textAlign='right';ctx.fillText('نیروگاه مرکزی ماتریسا',780,438);
+}
+function blocked(x,y){return obstacles.some(o=>x>o.x-16&&x<o.x+o.w+16&&y>o.y-16&&y<o.y+o.h+16)}
+function update(){
+ if(started&&!quizOpen){
+ let dx=0,dy=0;if(keys.ArrowUp||keys.w||keys.W)dy--;if(keys.ArrowDown||keys.s||keys.S)dy++;if(keys.ArrowLeft||keys.a||keys.A)dx--;if(keys.ArrowRight||keys.d||keys.D)dx++;
+ let len=Math.hypot(dx,dy)||1;let nx=Math.max(18,Math.min(782,player.x+dx/len*player.speed)),ny=Math.max(18,Math.min(442,player.y+dy/len*player.speed));
+ if(!blocked(nx,player.y))player.x=nx;if(!blocked(player.x,ny))player.y=ny;
+ }
+ draw();requestAnimationFrame(update);
+}
+function render(){
+ $('crystals').textContent=['۰','۱','۲','۳','۴'][crystals];$('score').textContent=score.toLocaleString('fa-IR');$('stage').textContent=active<4?missions[active].name:'پایان فصل';
+ $('objective').textContent=active<4?'به نشان نورانی نزدیک شو و دکمه تعامل را بزن.':'همه مأموریت‌ها انجام شدند.';
+ $('bar').style.width=(active/4*100)+'%';$('progressText').textContent=active.toLocaleString('fa-IR')+' از ۴ مأموریت';
+ $('sceneTitle').textContent=active<4?missions[active].name:'نیروگاه روشن';
+ [...$('levels').children].forEach((el,i)=>{el.className='level'+(i<active?' done':i===active?' active':'');el.lastElementChild.textContent=i<active?'✓':i===active?'📍':'🔒'});
+ $('story').textContent=active===0?'آرین به نیروگاه مرکزی رسیده است. نخستین مهر در کنار پل یخی قرار دارد.':active===1?'پل باز شده؛ حالا باید مسیر درست را در تالار اعداد گویا پیدا کنی.':active===2?'دو مسیر به هم پیوستند. با محاسبه جمع و تفریق، انرژی ذخیره‌شده را آزاد کن.':active===3?'سه مهر روشن شده‌اند. آخرین دروازه با ضرب و تقسیم اعداد گویا باز می‌شود.':'قلب دانش دوباره می‌درخشد؛ این فقط آغاز ماجراجویی ماتریساست.';
+}
+function openQuiz(){
+ if(active>=4)return;let t=targets[active];if(Math.hypot(player.x-t.x,player.y-t.y)>85){$('feedback').textContent='برای فعال‌کردن نشان، کمی به آن نزدیک‌تر شو.';return}
+ quizOpen=true;$('quizTitle').textContent=missions[active].title;$('question').textContent=missions[active].q;$('answer').value='';$('feedback').textContent='';$('quiz').classList.remove('hidden');$('answer').focus();
+}
+function normalize(s){return s.trim().replace(/[−–]/g,'-').replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/٫/g,'.').replace(/،/g,'.').replace(/\s/g,'')}
+function check(){
+ const m=missions[active],v=normalize($('answer').value),answers=m.a.map(normalize);
+ if(answers.includes(v)){
+ score+=100;crystals++;active++;quizOpen=false;$('quiz').classList.add('hidden');render();
+ if(active===4){$('finalScore').textContent='امتیاز تو: '+score.toLocaleString('fa-IR');$('ending').classList.remove('hidden')}
+ }else{$('feedback').textContent='هنوز درست نیست. دوباره فکر کن یا راهنمایی را ببین.'}
+}
+$('start').onclick=()=>{$('intro').classList.add('hidden');started=true;render()};
+$('interact').onclick=openQuiz;$('check').onclick=check;
+$('hint').onclick=()=>{$('feedback').textContent=missions[active].hint};
+$('close').onclick=()=>{$('quiz').classList.add('hidden');quizOpen=false};
+window.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' '){e.preventDefault();openQuiz()}if(e.key==='Enter'&&quizOpen)check()});
+window.addEventListener('keyup',e=>keys[e.key]=false);
+document.querySelectorAll('[data-move]').forEach(b=>{const k={up:'ArrowUp',down:'ArrowDown',left:'ArrowLeft',right:'ArrowRight'}[b.dataset.move];b.addEventListener('pointerdown',e=>{e.preventDefault();keys[k]=true});['pointerup','pointerleave','pointercancel'].forEach(ev=>b.addEventListener(ev,()=>keys[k]=false))});
+canvas.addEventListener('pointerdown',e=>{const r=canvas.getBoundingClientRect();const x=(e.clientX-r.left)*800/r.width,y=(e.clientY-r.top)*460/r.height;player.x=x;player.y=y});
+render();update();
+})();
+</script>
+</body>
+</html>
